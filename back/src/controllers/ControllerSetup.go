@@ -1,11 +1,12 @@
 package controllers
 
 import (
-	"src/repositories"
-	"src/services"
-	"src/vendor/github.com/go-playground/validator/v10"
+	"go-file-system/src/repositories"
+	"go-file-system/src/services"
 
-	"src/vendor/gorm.io/gorm"
+	"github.com/go-playground/validator/v10"
+
+	"gorm.io/gorm"
 
 	"github.com/gin-gonic/gin"
 )
@@ -20,6 +21,5 @@ func setupUserController(router *gin.RouterGroup, db *gorm.DB, validator *valida
 	userService := services.NewUserService(userRepo, validator)
 	userController := &UserController{UserService: userService}
 
-	router.GET("/get/:id", userController.Get)
-	router.GET("/save", userController.Save)
+	userController.setupUserRoutes(router)
 }

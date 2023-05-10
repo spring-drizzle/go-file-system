@@ -1,12 +1,13 @@
 package services
 
 import (
-	"src/errors"
-	"src/models"
-	"src/repositories"
-	"src/requests"
-	"src/vendor/github.com/go-playground/validator/v10"
+	"go-file-system/src/errors"
+	"go-file-system/src/models"
+	"go-file-system/src/repositories"
+	"go-file-system/src/requests"
 	"strings"
+
+	"github.com/go-playground/validator/v10"
 
 	"github.com/google/uuid"
 )
@@ -20,6 +21,14 @@ func NewUserService(repo repositories.IUserRepository, validator *validator.Vali
 	return &userService{UserRepo: repo, Validator: validator}
 }
 
+func (service *userService) Get(id string) (*models.User, error) {
+	return service.UserRepo.Get(id)
+}
+
+func (service *userService) GetAll() ([]models.User, error) {
+	return service.UserRepo.GetAll()
+}
+
 func (service *userService) Save(request requests.UserCreateRequest) error {
 	validateErr := service.Validator.Struct(request)
 	if validateErr != nil {
@@ -29,8 +38,4 @@ func (service *userService) Save(request requests.UserCreateRequest) error {
 	user := models.User{Id: uuid, Name: request.Name, Surname: request.Surname, Username: request.Username, Password: request.Password}
 
 	return service.UserRepo.Save(user)
-}
-
-func (service *userService) Get(id string) (*models.User, error) {
-	return service.UserRepo.Get(id)
 }
